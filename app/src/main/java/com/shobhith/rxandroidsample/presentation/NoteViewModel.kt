@@ -9,6 +9,7 @@ import com.shobhith.rxandroidsample.domain.use_case.InsertNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,12 +24,15 @@ class NoteViewModel @Inject constructor(
     val noteTitle = MutableLiveData<String>("")
     val noteDesc = MutableLiveData<String>("")
 
+    private var getNotesDisp: Disposable? = null
+    private var insertNotesDisp: Disposable? = null
+
     init {
         fetchNotes()
     }
 
     private fun fetchNotes() {
-        getNotes
+        getNotesDisp = getNotes
             .getNotes()
             .subscribeOn(Schedulers.io())
             .map { it.sortedByDescending { note -> note.id } }
@@ -45,7 +49,7 @@ class NoteViewModel @Inject constructor(
 
     fun insertNotes() {
         val note = Note(title = noteTitle.value!!, content = noteDesc.value!!)
-        insertNote
+        insertNotesDisp = insertNote
             .insertNotes(note)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -57,5 +61,11 @@ class NoteViewModel @Inject constructor(
                     _notesState.value = NotesState.Error(it.localizedMessage)
                 }
             )
+    }
+
+    override fun onCleared() {
+        getNotesDisp?.dispose()
+        insertNotesDisp?.dispose()
+        super.onCleared()
     }
 }
