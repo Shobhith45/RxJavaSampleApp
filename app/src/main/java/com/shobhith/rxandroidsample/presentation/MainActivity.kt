@@ -32,11 +32,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.notesState.observe(this) {
             when(it) {
                 is NotesState.NotesFetched -> {
-                    noteAdapter.updateList(it.notes)
+                    noteAdapter.updateList(it.notes ?: listOf())
                 }
                 is NotesState.NotesInserted -> {
                     Snackbar
                         .make(binding.root, "Note Successfully Inserted", Snackbar.LENGTH_LONG).show()
+                }
+                is NotesState.NotesDeleted -> {
+                    Snackbar
+                        .make(binding.root, "Note Deleted", Snackbar.LENGTH_LONG).show()
                 }
                 is NotesState.Error -> {
                     Snackbar
@@ -49,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupAdapter() {
         binding.rvNotes.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            noteAdapter = NoteAdapter()
+            noteAdapter = NoteAdapter { note -> viewModel.deleteNotes(note) }
             adapter = noteAdapter
         }
     }

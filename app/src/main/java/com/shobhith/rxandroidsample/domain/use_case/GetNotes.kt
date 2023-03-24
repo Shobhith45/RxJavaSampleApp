@@ -7,5 +7,5 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class GetNotes(private val notesRepository: NotesRepository) {
-    fun getNotes() : Observable<List<Note>> = notesRepository.getNotes()
+    operator fun invoke() : Observable<List<Note>> = notesRepository.getNotes()
 }

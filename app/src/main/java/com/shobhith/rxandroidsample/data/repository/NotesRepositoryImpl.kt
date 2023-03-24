@@ -14,4 +14,7 @@ class NotesRepositoryImpl(private val noteDao: NoteDao) : NotesRepository {
 
     override fun insertNotes(note: Note): Completable =
         noteDao.insertNote(note)
+
+    override fun deleteNote(note: Note): Completable =
+        noteDao.deleteNote(note)
 }

@@ -9,4 +9,6 @@ interface NotesRepository {
     fun getNotes() : Observable<List<Note>>
 
     fun insertNotes(note: Note) : Completable
+
+    fun deleteNote(note: Note) : Completable
 }

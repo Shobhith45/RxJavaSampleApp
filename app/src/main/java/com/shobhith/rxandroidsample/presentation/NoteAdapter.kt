@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shobhith.rxandroidsample.databinding.ItemNoteBinding
 import com.shobhith.rxandroidsample.domain.model.Note
 
-class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(private val longClick: (Note)->Unit) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     private var noteList = listOf<Note>()
 
@@ -15,15 +15,21 @@ class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
         notifyDataSetChanged()
     }
 
-    inner class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class NoteViewHolder(private val binding: ItemNoteBinding, private val longClick: (Note) -> Unit) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(note: Note) {
             binding.note = note
+            binding.root.setOnLongClickListener {
+                longClick.invoke(note)
+                true
+            }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return NoteViewHolder(binding)
+        return NoteViewHolder(binding, longClick)
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {

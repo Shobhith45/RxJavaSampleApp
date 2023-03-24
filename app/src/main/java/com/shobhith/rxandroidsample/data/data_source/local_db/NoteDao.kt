@@ -1,6 +1,7 @@
 package com.shobhith.rxandroidsample.data.data_source.local_db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -17,4 +18,7 @@ interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: Note): Completable
+
+    @Delete
+    fun deleteNote(note: Note): Completable
 }

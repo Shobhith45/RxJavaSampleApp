@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.shobhith.rxandroidsample.data.data_source.local_db.NoteDatabase
 import com.shobhith.rxandroidsample.data.repository.NotesRepositoryImpl
 import com.shobhith.rxandroidsample.domain.repository.NotesRepository
+import com.shobhith.rxandroidsample.domain.use_case.DeleteNote
 import com.shobhith.rxandroidsample.domain.use_case.GetNotes
 import com.shobhith.rxandroidsample.domain.use_case.InsertNote
 import dagger.Module
@@ -39,5 +40,11 @@ object AppModule {
     @Singleton
     fun provideInsertNoteUseCase(noteRepository: NotesRepository) : InsertNote {
         return InsertNote(noteRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteNoteUseCase(noteRepository: NotesRepository) : DeleteNote {
+        return DeleteNote(noteRepository)
     }
 }
